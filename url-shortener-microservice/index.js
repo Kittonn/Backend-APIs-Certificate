@@ -4,12 +4,12 @@ const cors = require("cors");
 const app = express();
 const bodyParser = require("body-parser");
 const connectDB = require("./db/connectDB");
-
 const port = process.env.PORT || 3000;
 
 const router = require("./routes/urlRoute");
 connectDB();
 
+app.use(express.urlencoded({ extended: false }))
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
