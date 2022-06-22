@@ -5,7 +5,6 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const connectDB = require("./db/connectDB");
 const User = require("./model/userModel");
-const Exercise = require("./model/exerciseModel");
 const Log = require("./model/logModel");
 
 connectDB();
@@ -44,7 +43,8 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   if (date === "" || date === undefined) {
     date = new Date().getTime();
   }
-  date = new Date(date).toDateString();
+  date = new Date(date).getTime();
+
   const userLog = await Log.findOne({ userid: req.params._id });
   if (!userLog) {
     const newLog = await Log.create({
@@ -64,10 +64,11 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
       },
     });
   }
+
   res.status(200).json({
     _id: user._id,
     username: user.username,
-    date,
+    date: new Date(date).toDateString(),
     duration: Number(duration),
     description,
   });
@@ -77,29 +78,46 @@ app.get("/api/users/:id/logs", async (req, res) => {
   const { from, to, limit } = req.query;
   const log = await Log.findOne({ userid: req.params.id });
   let log_arr = log.log;
+
   if (from && !to) {
-    // Test Case ท้าย 😭
+    log_arr = log_arr.filter((item) => {
+      let fDate = Date.parse(from);
+      let bDate = Date.parse(new Date(item.date).toISOString().slice(0, 10));
+      return bDate >= fDate;
+    });
   }
-  if (to && !from) {
-    // Test Case ท้าย 😭
+
+  if (!from && to) {
+    log_arr = log_arr.filter((item) => {
+      let tDate = Date.parse(to);
+      let bDate = Date.parse(new Date(item.date).toISOString().slice(0, 10));
+      return bDate <= tDate;
+    });
   }
-  if (to && from) {
-    // Test Case ท้าย 😭
+
+  if (from && to) {
+    log_arr = log_arr.filter((item) => {
+      let tDate = Date.parse(to);
+      let fDate = Date.parse(from);
+      let bDate = Date.parse(new Date(item.date).toISOString().slice(0, 10));
+      return bDate >= fDate && bDate <= tDate;
+    });
   }
-  if (limit) {
-    // Test Case ท้าย 😭
+
+  if (limit && limit != 0) {
+    log_arr = log_arr.slice(0, limit);
   }
+
+  log_arr = log_arr.map((item) => ({
+    ...item,
+    date: new Date(item.date).toDateString(),
+  }));
   res.status(200).json({
     _id: req.params.id,
     username: log.username,
     count: log_arr.length,
     log: log_arr,
   });
-});
-
-app.get("/test", (req, res) => {
-  console.log(new Date("Sat Jan 01 2022").getTime());
-  res.send("text");
 });
 
 const listener = app.listen(process.env.PORT || 3000, () => {
