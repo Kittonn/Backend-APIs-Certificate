@@ -11,7 +11,7 @@ app.get("/", function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
+app.post("/api/fileanalyse", upload.single("file"), (req, res) => {
   const { originalname, mimetype, size } = req.file;
   res.json({
     name: originalname,
