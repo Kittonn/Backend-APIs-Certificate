@@ -1,4 +1,4 @@
-const { getUrl, postUrl } = require("../controller/shorturl.controller");
+const { getUrl, postUrl } = require("../controllers/shorturl.controller");
 const validUrl = require("../middleware/valid-url.middleware");
 const router = require("express").Router();
 

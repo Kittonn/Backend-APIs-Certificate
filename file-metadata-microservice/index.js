@@ -11,13 +11,17 @@ app.get("/", function (req, res) {
   res.sendFile(process.cwd() + "/views/index.html");
 });
 
-app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
-  const { originalname, mimetype, size } = req.file;
-  res.json({
-    name: originalname,
-    type: mimetype,
-    size,
-  });
+app.post("/api/fileanalyse", upload.single("file"), (req, res) => {
+  try {
+    const { originalname, mimetype, size } = req.file;
+    return res.status(201).json({
+      name: originalname,
+      type: mimetype,
+      size,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: "Internal Server Error" });
+  }
 });
 
 const port = process.env.PORT || 3000;
