@@ -8,6 +8,7 @@ const urlSchema = Schema({
   short_url: {
     type: Number,
     required: true,
+    unique: true,
   },
 });
 
