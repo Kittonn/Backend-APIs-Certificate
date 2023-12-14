@@ -7,7 +7,7 @@ const getDate = (req, res) => {
     let time = pattern.test(date) ? new Date(Number(date)) : new Date(date);
 
     if (time.toString() === "Invalid Date") {
-      return res.status(200).json({ error: "Invalid Date" });
+      return res.status(200).json({ message: "Invalid Date" });
     }
 
     return res.status(200).json({
@@ -15,7 +15,7 @@ const getDate = (req, res) => {
       utc: time.toUTCString(),
     });
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -26,7 +26,7 @@ const nowDate = (req, res) => {
       utc: new Date().toUTCString(),
     });
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

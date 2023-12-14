@@ -4,7 +4,7 @@ const LogModel = require("../model/log.model");
 const createUser = async (req, res) => {
   try {
     const { username, _id } = await UserModel.create(req.body);
-    return res.status(200).json({ username, _id });
+    return res.status(201).json({ username, _id });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -50,7 +50,7 @@ const createExercise = async (req, res) => {
       });
     }
 
-    return res.status(200).json({
+    return res.status(201).json({
       _id: user._id,
       username: user.username,
       date: date.toDateString(),
