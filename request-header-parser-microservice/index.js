@@ -11,12 +11,15 @@ app.get("/", function (req, res) {
 });
 
 app.get("/api/whoami", (req, res) => {
-  const data = {
-    ipaddress: req.ip,
-    language: req.headers["accept-language"],
-    software: req.headers["user-agent"],
-  };
-  res.status(200).json(data);
+  try {
+    return res.status(200).json({
+      ipaddress: req.ip,
+      language: req.headers["accept-language"],
+      software: req.headers["user-agent"],
+    });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 });
 
 var listener = app.listen(process.env.PORT || 3000, function () {
